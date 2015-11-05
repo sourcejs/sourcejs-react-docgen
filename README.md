@@ -38,6 +38,17 @@ Other custom Spec file syntax with [sourcejs-react](https://github.com/szarouski
 
 Check usage examples in [react-styleguide-example](https://github.com/sourcejs/react-styleguide-example).
 
+### Define custom path to JSX file
+
+Using `info.json`, it's possible to define custom path to React component, apart from default `src/index.jsx`:
+
+```
+{
+  "title": "React Spec",
+  "main": "custom-relative-path/index.jsx"
+}
+```
+
 ### Exposed Data
 
 * **info.__docGenRaw** - raw JSON from react-docgen
