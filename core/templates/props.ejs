@@ -1,23 +1,23 @@
 <% if (typeof props !== 'undefined') { %>
-    <table>
+<table>
+    <tr>
+        <td>Property name</td>
+        <td>Type</td>
+        <td>Required</td>
+        <td>Default value</td>
+        <td>Description</td>
+    </tr>
+    <% for(var key in props) { %>
+        <% var val = props[key] %>
         <tr>
-            <td>Property name</td>
-            <td>Type</td>
-            <td>Required</td>
-            <td>Default value</td>
-            <td>Description</td>
+            <td><%- key %></td>
+            <td><%- val.type ? val.type.name : '-' %></td>
+            <td><%- val.required %></td>
+            <td><%- val.defaultValue ? val.defaultValue.value.replace(/'/g, '').replace(/"/g, '') : '-' %></td>
+            <td><%- val.description %></td>
         </tr>
-        <% for(var key in props) { %>
-            <% var val = props[key] %>
-            <tr>
-                <td><%- key %></td>
-                <td><%- val.type.name %></td>
-                <td><%- val.required %></td>
-                <td><%- val.defaultValue.value %></td>
-                <td><%- val.description %></td>
-            </tr>
-        <% } %>
-    </table>
+    <% } %>
+</table>
 <% } else { %>
     No props defined in component.
 <% } %>

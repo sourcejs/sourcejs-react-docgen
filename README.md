@@ -1,6 +1,6 @@
-# SourceJS auto React doc builder middleware.
+# SourceJS Auto React Doc Builder Middleware
 
-[react-docgen](https://github.com/reactjs/react-docgen) integration plugin, renders React components information into [SourceJS](http://sourcejs.com) Spec page. 
+[react-docgen](https://github.com/reactjs/react-docgen) integration plugin, renders React components information into [SourceJS](http://sourcejs.com) Spec page.
 
 Compatible with [SourceJS](http://sourcejs.com) 0.6.0+.
 
@@ -16,16 +16,16 @@ After restarting your app, middleware will be loaded automatically. To disable i
 
 ## Usage
 
-After installing the middleware, during spec load, plugin will try to find `<specPath>/index.jsx` or `<specPath>/src/index.jsx` file, analyze it and expose raw and rendered data objects. Data will be then available within [EJS Spec pre-rendering](http://sourcejs.com/docs/spec-helpers/#native-templating) (enabled by default).
+After installing the middleware, during SourceJS Spec load plugin will try to find first `<specPath>/*.jsx` file, analyze it and expose raw and rendered into HTML data objects. Data will be then available within [EJS Spec pre-rendering](http://sourcejs.com/docs/spec-helpers/#native-templating).
 
-Insert these code snippets anywhere you want in your Spec file
+Insert these code snippets anywhere you want in your Spec file:
 
 ```html
 <h1>My Spec</h1>
 
 <section class="source_section">
     <h2>Default Example</h2>
-    
+
     <p><%- info.__docGenRaw.description %></p>
 
     <%- info.__docGenHTML %>
@@ -34,13 +34,30 @@ Insert these code snippets anywhere you want in your Spec file
 </section>
 ```
 
-Other custom Spec file syntax with [sourcejs-react](https://github.com/szarouski/sourcejs-react) and [sourcejs-md-react](https://github.com/mik01aj/sourcejs-md-react) plugins is also supported. 
+    # My Spec
 
-Check usage examples in [react-styleguide-example](https://github.com/sourcejs/react-styleguide-example).
+    ## Default Example
 
-### Define custom path to JSX file
+    <%- info.__docGenRaw.description %>
 
-Using `info.json`, it's possible to define custom path to React component, apart from default `src/index.jsx`:
+    <%- info.__docGenHTML %>
+
+    ```example
+    code
+    ```
+
+Other custom Spec file syntax options like [sourcejs-react](https://github.com/szarouski/sourcejs-react) and [sourcejs-md-react](https://github.com/mik01aj/sourcejs-md-react) plugins are also supported.
+
+Check usage examples in [react-styleguide-example](https://github.com/sourcejs/react-styleguide-example) and [react-styleguidist-example](https://github.com/sourcejs/react-styleguidist-example).
+
+### EJS exposed data
+
+* **info.__docGenRaw** - raw JSON from react-docgen
+* **info.__docGenHTML** - rendered table with properties
+
+## Configuration
+
+Using Spec's `info.json` file, it's possible to define custom path to React component:
 
 ```
 {
@@ -49,14 +66,40 @@ Using `info.json`, it's possible to define custom path to React component, apart
 }
 ```
 
-### Exposed Data
+Or overriding global plugin configuration:
 
-* **info.__docGenRaw** - raw JSON from react-docgen
-* **info.__docGenHTML** - rendered table with properties
+```javascript
+module.exports = {
+	plugins: {
+		reactDocgen: {
+			componentPath: 'custom/path/index.jsx',
+		}
+	}
+};
+```
 
-## TODO
+See other configuration options below.
 
-* Add more configuration options
+### enabled
+
+Default: true
+Type: _boolean_
+
+
+Set `false` to disable middleware.
+
+### componentPath
+
+Default: '*.jsx'
+Type: _string_
+
+Define custom path to component entry file. Accepts [glob](https://github.com/isaacs/node-glob) string, which will be resolved relatively to spec path (takes only first found file).
+
+## TODO:
+
+* Add auto-append option
+
+Pull request highly welcome!
 
 ## Other SourceJS Middlewares
 

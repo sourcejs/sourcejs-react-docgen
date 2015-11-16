@@ -1,6 +1,6 @@
 {
   "name": "sourcejs-react-docgen",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "SourceJS auto React doc builder middleware.",
   "repository": {
     "type": "git",
@@ -9,6 +9,7 @@
   "homepage": "https://github.com/sourcejs/sourcejs-react-docgen",
   "dependencies": {
     "ejs": "^2.3.4",
-    "react-docgen": "^2.2.0"
+    "glob": "^6.0.1",
+    "react-docgen": "^2.4.0"
   }
 }

@@ -2,17 +2,21 @@ var reactDocgen = require('react-docgen');
 var path = require('path');
 var fs = require('fs');
 var ejs = require('ejs');
+var glob = require("glob");
 var specUtils = require(path.join(global.pathToApp,'core/lib/specUtils'));
 var currentDir = path.dirname(__filename);
+var sourceJSUtils = require(path.join(global.pathToApp, 'core/lib/utils'));
 
 // Module configuration
 var globalConfig = global.opts.plugins && global.opts.plugins.reactDocgen ? global.opts.plugins.reactDocgen : {};
 var config = {
     enabled: true,
+    componentPath: '*.jsx',
 
     // Public object is exposed to Front-end via options API.
     public: {}
 };
+sourceJSUtils.extendOptions(config, globalConfig);
 
 /*
  * @param {object} req - Request object
@@ -27,41 +31,36 @@ var processRequest = function (req, res, next) {
 
     // Check if request is targeting Spec
     if (req.specData && req.specData.renderedHtml) {
-        var componentInfo = {};
+        var componentDocs = {};
         var error = false;
         var specPath = specUtils.getFullPathToSpec(req.path);
-        var componentPath = path.join(specPath, 'src/index.jsx');
-        var componentPathAlt = path.join(specPath, 'index.jsx');
-        var componentPathExists = fs.existsSync(componentPath);
-        var componentPathAltExists = fs.existsSync(componentPathAlt);
-        var componentPathToUse;
+        var componentPathToUse = req.specData.info.main || config.componentPath;
 
-        if (!(componentPathExists || componentPathAltExists)) {
+        var componentFilePath = glob.sync(componentPathToUse, {
+            cwd: specPath,
+            realpath: true
+        })[0];
+
+        if (!fs.existsSync(componentFilePath)) {
             next();
             return;
         }
 
-        if (req.specData.info.main && fs.existsSync(path.join(specPath, req.specData.info.main))) {
-            componentPathToUse = path.join(specPath, req.specData.info.main);
-        } else {
-            componentPathToUse = fs.existsSync(componentPath) ? componentPath : componentPathAlt;
-        }
-
-        var componentContent = fs.readFileSync(componentPathToUse, 'utf-8');
+        var componentContent = fs.readFileSync(componentFilePath, 'utf-8');
         var propsTpl = fs.readFileSync(path.join(currentDir, '../templates/props.ejs'), 'utf-8');
 
         try {
-            componentInfo = reactDocgen.parse(componentContent);
+            componentDocs = reactDocgen.parse(componentContent);
         } catch(e) {
             error = true;
             console.warn('sourcejs-react-docgen: error generating component doc', e);
         }
 
-        req.specData.info.__docGenRaw = componentInfo;
+        req.specData.info.__docGenRaw = componentDocs;
 
         if (!error) {
             try {
-                req.specData.info.__docGenHTML = ejs.render(propsTpl, componentInfo);
+                req.specData.info.__docGenHTML = ejs.render(propsTpl, componentDocs);
             } catch(e) {
                 console.warn('sourcejs-react-docgen: error rendering docgen props', e);
             }
