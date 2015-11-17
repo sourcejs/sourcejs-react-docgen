@@ -48,7 +48,7 @@ Insert these code snippets anywhere you want in your Spec file:
 
 Other custom Spec file syntax options like [sourcejs-react](https://github.com/szarouski/sourcejs-react) and [sourcejs-md-react](https://github.com/mik01aj/sourcejs-md-react) plugins are also supported.
 
-Check usage examples in [react-styleguide-example](https://github.com/sourcejs/react-styleguide-example) and [react-styleguidist-example](https://github.com/sourcejs/react-styleguidist-example).
+Check usage examples in [sourcejs-react-bundle-example](http://github.com/sourcejs/sourcejs-react-bundle-example) and [react-styleguide-example](https://github.com/sourcejs/react-styleguide-example).
 
 ### EJS exposed data
 
